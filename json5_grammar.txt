@@ -62,7 +62,7 @@ numeric-literal: (
 );
 
 decimal-literal: (
-    decimal-integer-literal '.' decimal-digits? exponent_part? |
+    decimal-integer-literal '.' decimal-digits? exponent-part? |
     '.' decimal-digits exponent-part? |
     decimal-integer-literal exponent-part?
 );
@@ -106,4 +106,44 @@ hex-digit: (
 # String Handling
 # ---------------
 
-json5-string: 'a';
+json5-string: (
+    '"' json5-double-string-characters? '"' |
+    '\'' json5-single-string-characters? '\''
+);
+
+json5-double-string-characters: json5-double-string-character json5-double-string-characters?;
+json5-single-string-characters: json5-single-string-character json5-single-string-characters?;
+
+json5-double-string-character: (
+    '[^"\\\r\n]' |
+    '\' escape-sequence |
+    line-continuation |
+    '\x{2028}' |
+    '\x{2029}'
+);
+
+json5-double-string-character: (
+    '[^\'\\\r\n]' |
+    '\' escape-sequence |
+    line-continuation |
+    '\x{2028}' |
+    '\x{2029}'
+);
+
+escape-sequence: (
+    character-escape-sequence |
+    '0' | # [lookahead decimal-digit?]
+    hex-escape-sequence |
+    unicode-escape-sequence
+);
+
+character-escape-sequence: (
+    single-escape-character |
+    non-escape-character
+);
+
+single-escape-character: '[\'"\\bfnrtv]';
+non-escape-character: 'a';
+
+line-continuation: 'a';
+
