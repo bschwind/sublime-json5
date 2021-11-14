@@ -1,0 +1,109 @@
+main : json5-text;
+
+json5-text: json5-value;
+
+json5-value: (
+    json5-null |
+    json5-boolean |
+    json5-string |
+    json5-number |
+    json5-object |
+    json5-array
+);
+
+json5-null: 'null';
+json5-boolean: ('true' | 'false');
+
+json5-array: (
+    '[' ']' |
+    '[' json5-element-list ','? ']'
+);
+
+json5-object: (
+    '{' '}' |
+    '{' json5-member-list ','? '}'
+);
+
+json5-member-list: (
+    json5-member |
+    json5-member-list ',' json5-member
+);
+
+json5-member: json5-member-name ':' json5-value;
+
+json5-member-name: (json5-identifier | json5-string);
+
+json5-element-list: (
+    json5-value |
+    json5-element-list ',' json5-value
+);
+
+json5-identifier: 'a';
+
+
+# Number handling
+# ---------------
+
+json5-number: (
+    json5-numeric-literal |
+    '+' json5-numeric-literal |
+    '-' json5-numeric-literal
+);
+
+json5-numeric-literal: (
+    numeric-literal |
+    'Infinity' |
+    'NaN'
+);
+
+numeric-literal: (
+    decimal-literal |
+    hex-integer-literal
+);
+
+decimal-literal: (
+    decimal-integer-literal '.' decimal-digits? exponent_part? |
+    '.' decimal-digits exponent-part? |
+    decimal-integer-literal exponent-part?
+);
+
+decimal-integer-literal: (
+    '0' |
+    non-zero-digit decimal-digits?
+);
+
+decimal-digits: (
+    decimal-digit |
+    decimal-digits decimal-digit
+);
+
+decimal-digit: '[0-9]';
+
+non-zero-digit: '[1-9]';
+
+exponent-part: exponent-indicator signed-integer;
+
+exponent-indicator: 'e' | 'E';
+
+signed-integer: (
+    decimal-digits |
+    '+' decimal-digits |
+    '-' decimal-digits
+);
+
+hex-integer-literal: (
+    '0x' hex-digit |
+    '0X' hex-digit |
+    hex-integer-literal hex-digit
+);
+
+hex-digit: (
+    '[0-9]' |
+    '[a-f]' |
+    '[A-F]'
+);
+
+# String Handling
+# ---------------
+
+json5-string: 'a';
